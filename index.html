@@ -11,21 +11,40 @@
 </head>
 <body>
   <header>Rock, Paper, Scissors!</header>
-  <main>
-    <div class="instruction-wrapper">
-      <p> First player to reach 5 points wins the game</p>
-      <p> To begin, make your selection below</p>
-    </div>
-
-    <div class="selection-wrapper">
-      <div id="btnRock" class="selection">&#x270a;</div>
-      <div id="btnPaper" class="selection">&#x270B;</div>
-      <div id="btnScissors" class="selection">&#x270C;</div>
-    </div>
+  <h2 class="rules">First to 5 wins</h2>
+  <div class="score">
+    <!-- <h1 class="ties">Ties: 0</h1> -->
+  </div>
+  <div class="playerImgs">
+    <img src="./images/rock.png" alt="Rock" class="pImg" id="rock">
+    <img src="./images/paper.png" alt="Paper" class="pImg" id="paper">
+    <img src="./images/scissors.png" alt="Scissors" class="pImg" id="scissors">
+  </div>
+  <div class="scoreWrapper">
+    <h3 class="playerScore"> Player Score: 0</h3>
+    <h3 class="computerScore">Computer Score: 0</h3>
+  </div>
+  <div class="choiceWrapper">
+    <h3 class="playerChoice"></h3>
+    <h3 class="computerChoice"></h3>
+  </div>
+  <div class="winnerDiv">
+    <h1 class="winner"></h1>
+    <button class="reset" onclick="resetGame()">Play Again</button>
+  </div>
+  <div class="playerSection">
     
-    <div class="results"></div>
 
-  </main>
+
+  </div>
+  <!-- <div class="computerSection">
+    
+    <div class="computerImgs">
+      <img src="./images/rock.png" alt="Rock" class="rock" />
+      <img src="./images/paper.png" alt="Paper" class="paper" />
+      <img src="./images/scissors.png" alt="Scissors" class="scissors" />
+    </div> -->
+  </div>
   
 </body>
 <script src="app.js"></script>

@@ -11,6 +11,7 @@ let randomNum = (max) => {
 
 let computerPlay = () => {
   return rpsArr[randomNum(3)];
+  // update dom with computer selection
 }
 // This is the function that will be used to generate the computers selection of either rock, paper, or scissors. 
 
@@ -46,19 +47,32 @@ function checkWinner(choiceP, choiceC) {
 }
 // Function that returns who won based on some conditionals. Later we'll use this to push the winner into an array which we will count to log the score of the whole game (5 rounds total).
 
-const winners = [];
+let winners = [];
 
 function logWins() {
   let playerWins = winners.filter((item) => item == "Player").length;
   let computerWins = winners.filter((item) => item == "Computer").length;
   let ties = winners.filter((item) => item == "Tie").length;
-  console.log("Results:")
-  console.log("Player Wins:", playerWins)
-  console.log("Computer Wins:", computerWins)
-  console.log("Ties:", ties)
-  console.log(finalWinner(playerWins, computerWins))
+
 }
 // Function prints the results of the game. *MORE DETAIL*
+
+function checkWins() {
+  let playerWins = winners.filter((item) => item == "Player").length;
+  let computerWins = winners.filter((item) => item == "Computer").length;
+  return Math.max(playerWins, computerWins)
+}
+// Returns the winner of the game. Looks at the Winners array and counts who had the most wins
+
+function tallyWins() {
+  let playerWins = winners.filter((item) => item == "Player").length;
+  let computerWins = winners.filter((item) => item == "Computer").length;
+  let ties = winners.filter((item) => item == "Tie").length;
+  document.querySelector('.playerScore').textContent = `Your Score: ${playerWins}`;
+  document.querySelector('.computerScore').textContent = `Computer Score: ${computerWins}`;
+
+}
+// Keeps and updates the score in the gui
 
 function finalWinner(playerWins, computerWins) {
   if (playerWins === computerWins) {
@@ -72,23 +86,56 @@ function finalWinner(playerWins, computerWins) {
 // Function that compares playerWins and computerWins
 
 
-function logRound(pSelection, cSelection, winDeclaration, round) {
-  console.log("Round:", round)
-  console.log("Player Chose:", pSelection)
-  console.log("Computer Chose:", cSelection)
-  console.log(winDeclaration)
-  console.log("-------------------------")
-}
 
-let gameRound = (round) => {
-  const pSelection = playerChoice();
+let gameRound = (pSelection) => {
+  // Is parameter correct? Should be the players selction
+  let wins = checkWins();
+  if (wins >= 5) {
+    return
+  }
+
   const cSelection = computerPlay();
   const winner = checkWinner(pSelection, cSelection);
   const winDeclaration = playRound(pSelection, cSelection)
   winners.push(winner);
-  logRound(pSelection, cSelection, winDeclaration, round)
+  tallyWins();
+  displayRound(pSelection, cSelection, winner);
+  wins = checkWins();
+  if (wins == 5) {
+    // display end results
+    // change the play again button to visible
+    // change the text to display winner
+    displayEnd();
+  }
 }
 // gameRound function acts as a wrapper of all the other functions.
+
+function displayEnd() {
+  let playerWins = winners.filter((item) => item == "Player").length;
+  if (playerWins == 5) {
+    document.querySelector('.winner').textContent = "Congrats! You won 5 games!"
+  } else {
+    document.querySelector('.winner').textContent = "Sorry, you lost. The computer won 5 games."
+  }
+  document.querySelector('.reset').style.display = 'flex';
+}
+
+function displayRound(pSelection, cSelection, winner) {
+  document.querySelector('.playerChoice').textContent = `You Chose: ${pSelection.charAt(0).toUpperCase() + pSelection.slice(1)}`
+  document.querySelector('.computerChoice').textContent = `Computer Chose: ${cSelection.charAt(0).toUpperCase() + cSelection.slice(1)}`
+  document.querySelector('.winner').textContent = `Round Winner: ${winner}`;
+  displayRoundWinner(winner);
+}
+
+function displayRoundWinner(winner) {
+  if (winner == 'Player') {
+    document.querySelector('.winner').textContent = 'You won the round!';
+  } else if ( winner == 'Computer') {
+    document.querySelector('.winner').textContent = 'The computer won the round.';
+  } else {
+    document.querySelector('.winner').textContent = 'The round was a tie!'
+  }
+}
 
 function playRound(playerSelection, computerSelection) {
   if (playerSelection === computerSelection) {
@@ -110,41 +157,26 @@ function playRound(playerSelection, computerSelection) {
 // This function plays a round of the game and returns who won and how.
 
 function game () {
-  for (let i = 1; i <= 5; i++) {
-    gameRound(i);
-  }
-  logWins();
+// Play the game until 5 wins
+  let imgs = document.querySelectorAll('img')
+  imgs.forEach((img) => 
+  img.addEventListener(('click'), () => {
+    if(img.id) {
+      gameRound(img.id);
+    }
+  }))
 }
-
 // Main game function that uses a For loop and loops through 5 rounds.
 
-// game()
-// ----------------------------
+function resetGame() {
+  winners = [];
+  document.querySelector('.playerScore').textContent = 'Player Score: 0';
+  document.querySelector('.computerScore').textContent = 'Computer Score: 0';
 
-// Can pSelection and cSelection be global scoped and then used in both 
+  document.querySelector('.winner').textContent = '';
+  document.querySelector('.playerChoice').textContent = '';
+  document.querySelector('.computerChoice').textContent = '';
+  document.querySelector('.reset').style.display = 'none';
+}
 
-
-// Need to make "${variable won the round" it's own function outside of 
-
-
-// *-------------------------*
-// *---------- UI -----------*
-// *-------------------------*
-
-// need to create variable for each possible player selection. For example btnRock = the id of the div containing that selection. Then you add event listener to that variable such as btnRock 'click'
-
-// const btn = document.querySelectorAll('.selection')
-// btn.forEach(btn => btn.addEventListener('click', gameRound));
-
-const btnRock = document.getElementById('btnRock')
-const btnPaper = document.getElementById('btnPaper')
-const btnScissors = document.getElementById('btnScissors')
-
-btnPaper.addEventListener('click', () => playerChoice('paper'));
-
-
-
-
-
-// playerchoice a function with parameter of rock paper or scissors. Then just return that string.
-// ORR can I somehow say IF btnPaper is clicked,  
+game();
